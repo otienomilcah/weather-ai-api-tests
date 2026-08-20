@@ -240,9 +240,11 @@ These checks provide basic performance visibility. They are not intended to repl
 
 ### 7. Rate Limiting
 
-Rate-limit behavior is tested only where the API exposes documented rate-limit information.
+Rate-limit behavior is covered through HTTP `429 Too Many Requests` handling in `test_error_handling.py`.
 
-The framework does not assume undocumented response headers. If a rate-limit header is not returned by the API, the test should not treat that undocumented header as a required contract.
+The test uses mocking to verify that the framework correctly handles a rate-limit response without intentionally exhausting the live API quota.
+
+Rate-limit response headers such as `X-RateLimit-Limit`, `X-RateLimit-Remaining`, and `X-RateLimit-Reset` are not asserted because they were not returned by the live API during testing.
 
 ## Test Design Principles
 
@@ -348,7 +350,7 @@ This project addresses the key requirements of the API automation assignment:
 | Authorization | `test_authorization.py` |
 | Error handling | `test_error_handling.py` |
 | Performance considerations | `test_performance.py` |
-| Rate-limit considerations | `test_rate_limit.py` |
+| Rate-limit considerations | HTTP 429 handling in `test_error_handling.py` |
 | Readable and maintainable code | Reusable API client and Pytest fixtures |
 | Test reporting | `pytest-html` |
 | CI integration | GitHub Actions |
